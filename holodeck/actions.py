@@ -1,6 +1,8 @@
 from django.conf import settings
 from datetime import datetime
-
+from django.contrib.sites.models import Site
+from django.contrib.comments.models import Comment
+from django.contrib.sites.models import Site
 
 def push_users_types(ga_service, client, range_start, range_end, ref_date):
     print "Pushing Mobi Users Types"
@@ -82,5 +84,17 @@ def push_pageviews_cumulative(ga_service, client, range_start, range_end, ref_da
             ("Pageviews", results['totalsForAllResults']['ga:pageviews']),
         ),
         api_key=settings.HOLODECK_API.get('pageviews_cumulative'),
+        timestamp=ref_date,
+    )
+
+
+def push_comments_total(client, ref_date):
+    print "Pushing total comments"
+    comments = Comment.objects.filter(site=Site.objects.get_current())
+    client.send(
+        samples=(
+            ("All", comments.filter(submit_date__lte=ref_date).count()),
+        ),
+        api_key=settings.HOLODECK_API.get('comments_total'),
         timestamp=ref_date,
     )

@@ -21,3 +21,4 @@ def push(ref_date=datetime.now()):
     actions.push_users_cummulative(ga_service, client, range_start, range_end, ref_date)
     actions.push_pageviews_weekly(ga_service, client, range_start, range_end, ref_date)
     actions.push_pageviews_cumulative(ga_service, client, range_start, range_end, ref_date)
+    actions.push_comments_total(client, ref_date)
