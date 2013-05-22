@@ -2,8 +2,8 @@ from django.conf import settings
 from datetime import datetime
 
 
-def push_users_types(ga_service, client, range_start, range_end):
-    print "Pushing Mobi User Types"
+def push_users_types(ga_service, client, range_start, range_end, ref_date):
+    print "Pushing Mobi Users Types"
 
     query = ga_service.data().ga().get(
         ids='ga:%d' % settings.HOLODECK_API.get('ga_profile_id'),
@@ -18,11 +18,11 @@ def push_users_types(ga_service, client, range_start, range_end):
         client.send(
             samples=[(row[0], int(row[1])) for row in results['rows']],
             api_key=settings.HOLODECK_API.get('users_types'),
-            timestamp=datetime.now(),
+            timestamp=ref_date,
         )
 
 
-def push_users_cummulative(ga_service, client, range_start, range_end):
+def push_users_cummulative(ga_service, client, range_start, range_end, ref_date):
     print "Pushing Mobi Users Cumulative"
 
     range_start_cumulative = datetime(year=2013, month=1, day=1,
@@ -40,11 +40,11 @@ def push_users_cummulative(ga_service, client, range_start, range_end):
             ("Users", results['totalsForAllResults']['ga:visitors']),
         ),
         api_key=settings.HOLODECK_API.get('users_cumulative'),
-        timestamp=datetime.now(),
+        timestamp=ref_date,
     )
 
 
-def push_pageviews_weekly(ga_service, client, range_start, range_end):
+def push_pageviews_weekly(ga_service, client, range_start, range_end, ref_date):
     print "Pushing Mobi Weekly Pageviews"
 
     query = ga_service.data().ga().get(
@@ -60,11 +60,11 @@ def push_pageviews_weekly(ga_service, client, range_start, range_end):
             ("Pageviews", results['totalsForAllResults']['ga:pageviews']),
         ),
         api_key=settings.HOLODECK_API.get('pageviews_weekly'),
-        timestamp=datetime.now(),
+        timestamp=ref_date,
     )
 
 
-def push_pageviews_cumulative(ga_service, client, range_start, range_end):
+def push_pageviews_cumulative(ga_service, client, range_start, range_end, ref_date):
     print "Pushing Mobi Pageviews Cumulative"
 
     range_start_cumulative = settings.HOLODECK_API.get('cumulative_start_date')
@@ -82,5 +82,5 @@ def push_pageviews_cumulative(ga_service, client, range_start, range_end):
             ("Pageviews", results['totalsForAllResults']['ga:pageviews']),
         ),
         api_key=settings.HOLODECK_API.get('pageviews_cumulative'),
-        timestamp=datetime.now(),
+        timestamp=ref_date,
     )
